@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Math Quiz App</title>
+    <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+</head>
+<body>
+
+    <h1>📘 Math Quiz App</h1>
+
+    <div id="quiz-box">
+        <div id="setup">
+            <input type="text" id="studentName" placeholder="Enter your name" required><br>
+        <select id="subject">
+  <option value="math">Math</option>
+  <option value="english">English</option>
+  <option value="logic">Logic</option>
+</select><br>
+
+<select id="difficulty">
+  <option value="easy">Easy (1–10)</option>
+  <option value="medium">Medium (10–50)</option>
+  <option value="hard">Hard (50–100)</option>
+</select><br>
+
+            
+            <button onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <div id="quiz-content" style="display:none;">
+            <div id="timer">
+                ⏳ Time left: 30s
+            </div>
+            <div id="question">
+                What is 1 + 1?
+            </div>
+            <input type="number" id="answer" placeholder="Answer"><br>
+            <button onclick="checkAnswer()">Submit</button>
+            <div id="feedback"></div>
+            <div id="score">
+                Score: 0
+            </div>
+        </div>
+    </div>
+
+    <div id="results">
+        <h3>📊 Previous Scores</h3>
+        <table id="scoreTable">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th>Level</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+<script src="script.js" type="text/javascript" charset="utf-8"></script>
+
+</body>
+</html>
