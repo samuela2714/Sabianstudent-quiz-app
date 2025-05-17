@@ -1,67 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Math Quiz App</title>
-    <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+  <meta charset="UTF-8">
+  <title>Sabian Quiz App</title>
+  <link rel="stylesheet" href="style.cssstyle.css" type="text/css" media="all" />
+
 </head>
 <body>
+  <div id="nav">
+    <img src="sa.jpg" alt="sabian" class="logo">
+    <h1>📘 ሳቢያን 2ኛ ደረጃ ት/ቤት</h1>
+    <h2>Sabian Secondary School</h2>
+  </div>
 
-    <h1>📘 Math Quiz App</h1>
+  <div id="loginPage">
+    <h2>🎓 Student Login</h2>
+    <input type="text" id="loginName" placeholder="Enter your name">
+    <button onclick="loginStudent()">Login</button>
+  </div>
+
+  <div id="quizPage" style="display:none;">
+    <div id="header">
+      <span>👤 Welcome, <span id="displayStudentName"></span></span>
+      <button onclick="logout()" style="float:right;">Logout</button>
+    </div>
 
     <div id="quiz-box">
-        <div id="setup">
-            <input type="text" id="studentName" placeholder="Enter your name" required><br>
+      <div id="setup">
+        <input type="text" id="quizName" placeholder="Enter your name" required>
         <select id="subject">
-  <option value="math">Math</option>
-  <option value="english">English</option>
-  <option value="logic">Logic</option>
-</select><br>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="js">JS</option>
+        </select>
+        <select id="difficulty">
+          <option value="easy">Easy (1–10)</option>
+          <option value="medium">Medium (10–50)</option>
+          <option value="hard">Hard (50–100)</option>
+        </select>
+        <button onclick="startQuiz()">Start Quiz</button>
+      </div>
 
-<select id="difficulty">
-  <option value="easy">Easy (1–10)</option>
-  <option value="medium">Medium (10–50)</option>
-  <option value="hard">Hard (50–100)</option>
-</select><br>
-
-            
-            <button onclick="startQuiz()">Start Quiz</button>
+      <div id="quiz-content" style="display:none;">
+        <div id="progressContainer">
+          <div id="progressBar"></div>
         </div>
 
-        <div id="quiz-content" style="display:none;">
-            <div id="timer">
-                ⏳ Time left: 30s
-            </div>
-            <div id="question">
-                What is 1 + 1?
-            </div>
-            <input type="number" id="answer" placeholder="Answer"><br>
-            <button onclick="checkAnswer()">Submit</button>
-            <div id="feedback"></div>
-            <div id="score">
-                Score: 0
-            </div>
-        </div>
+        <div id="timer">⏳ Time left: 30s</div>
+        <div id="question"></div>
+           <div id="choicesContainer"></div>
+        
+        
+        <button onclick="checkAnswer()">Submit</button>
+        <div id="feedback"></div>
+        <div id="score">Score: 0</div>
+      </div>
     </div>
 
     <div id="results">
-        <h3>📊 Previous Scores</h3>
-        <table id="scoreTable">
-            <thead>
-                <tr>
-                    <th>Subject</th>
-
-                    <th>Name</th>
-                    <th>Score</th>
-                    <th>Level</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+      <h3>📊 Previous Scores</h3>
+      <table id="scoreTable">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Name</th>
+            <th>Score</th>
+            <th>Level</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
+  </div>
 
 <script src="script.js" type="text/javascript" charset="utf-8"></script>
-
 </body>
 </html>

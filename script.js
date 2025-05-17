@@ -1,40 +1,86 @@
-    
-    let subject = '';
 
-        let num1, num2, operator, correctAnswer;
-        let score = 0;
-        let timer;
-        let timeLeft = 30;
-        let min = 1, max = 10;
-        let studentName = "";
-        let difficultyLevel = "";
+let totalQuestions = 5;
+let questionsAnswered = 0;
+let subject = '', studentName = '', difficultyLevel = '';
+let correctAnswer = '';
+let score = 0, timer, timeLeft = 30;
+let currentQuestion = {};
+let questionBank = [];
 
-        function startQuiz() {
-            subject = document.getElementById("subject").value;
+const questions = {
+  html: [
+    {
+      question: "What does HTML stand for?",
+      choices: ["Hyperlink and Text Markup Language", "HyperText Markup Language", "Home Tool Markup Language", "Hyper Transfer Markup Language"],
+      answer: "HyperText Markup Language"
+    },
+    {
+      question: "Which tag is used to create a hyperlink?",
+      choices: ["a", "link", "href", "url"],
+      answer: "a"
+    },
+    {
+      question: "Which tag inserts an image?",
+      choices: ["img", "src", "image", "pic"],
+      answer: "img"
+    }
+  ],
+  css: [
+    {
+      question: "What does CSS stand for?",
+      choices: ["Cascading Style Sheets", "Colorful Style Syntax", "Computer Style System", "Creative Styling Structure"],
+      answer: "Cascading Style Sheets"
+    },
+    {
+      question: "Which symbol is used for ID selector?",
+      choices: [".", "#", "*", "@"],
+      answer: "#"
+    }
+  ],
+  js: [
+    {
+      question: "What does JS stand for?",
+      choices: ["Java Style", "Just Script", "JavaScript", "JumpStart"],
+      answer: "JavaScript"
+    },
+    {
+      question: "Which function shows an alert box?",
+      choices: ["msg()", "alert()", "show()", "popup()"],
+      answer: "alert()"
+    }
+  ]
+};
 
-            studentName = document.getElementById("studentName").value.trim();
-            difficultyLevel = document.getElementById("difficulty").value;
+function loginStudent() {
+  const name = document.getElementById('loginName').value.trim();
+  if (!name) return alert("Please enter your name!");
+  document.getElementById('displayStudentName').textContent = name;
+  document.getElementById('quizName').value = name;
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('quizPage').style.display = 'block';
+}
 
-            if (!studentName) {
-                alert("Please enter your name.");
-                return;
-            }
+function logout() {
+  location.reload();
+}
 
-            if (difficultyLevel === 'easy') {
-                min = 1; max = 10;
-            } else if (difficultyLevel === 'medium') {
-                min = 10; max = 50;
-            } else {
-                min = 50; max = 100;
-            }
+function startQuiz() {
+  subject = document.getElementById("subject").value;
+  studentName = document.getElementById("quizName").value.trim();
+  difficultyLevel = document.getElementById("difficulty").value;
 
-            score = 0;
-            document.getElementById('score').textContent = `Score: ${score}`;
-            document.getElementById('setup').style.display = 'none';
-            document.getElementById('quiz-content').style.display = 'block';
+  if (!studentName) {
+    alert("Please enter your name before starting.");
+    return;
+  }
 
-            generateQuestion();
-        }
+  questionBank = [...questions[subject]];
+  score = 0;
+  questionsAnswered = 0;
+  document.getElementById("score").textContent = "Score: 0";
+  document.getElementById("quiz-content").style.display = "block";
+  generateQuestion();
+}
 
 function generateQuestion() {
   clearInterval(timer);
@@ -44,124 +90,88 @@ function generateQuestion() {
   timer = setInterval(() => {
     timeLeft--;
     updateTimer();
-    if (timeLeft === 0) {
+    if (timeLeft <= 0) {
       clearInterval(timer);
       document.getElementById('feedback').textContent = "⏰ Time's up!";
-      setTimeout(generateQuestion, 1500);
+      questionsAnswered++;
+      if (questionsAnswered >= totalQuestions) {
+        endQuiz();
+      } else {
+        setTimeout(generateQuestion, 1500);
+      }
     }
   }, 1000);
 
-  if (subject === 'math') {
-    num1 = Math.floor(Math.random() * (max - min + 1)) + min;
-    num2 = Math.floor(Math.random() * (max - min + 1)) + min;
-    const operators = ['+', '-', '*', '/'];
-    operator = operators[Math.floor(Math.random() * operators.length)];
-    if (operator === '/') {
-      num1 = num1 * num2;
-    }
+  currentQuestion = questionBank[Math.floor(Math.random() * questionBank.length)];
+  correctAnswer = currentQuestion.answer.toLowerCase();
+  document.getElementById('question').textContent = currentQuestion.question;
 
-    switch (operator) {
-      case '+': correctAnswer = num1 + num2; break;
-      case '-': correctAnswer = num1 - num2; break;
-      case '*': correctAnswer = num1 * num2; break;
-      case '/': correctAnswer = num1 / num2; break;
-    }
+  const choicesHTML = currentQuestion.choices.map(choice => `
+    <label>
+      <input type="radio" name="choice" value="${choice}">
+      ${choice}
+    </label>
+  `).join('');
+  document.getElementById('choicesContainer').innerHTML = choicesHTML;
 
-    document.getElementById('question').textContent = `What is ${num1} ${operator} ${num2}?`;
+  document.getElementById('feedback').textContent = '';
+  updateProgress();
+}
 
-  } else if (subject === 'english') {
-    const words = [
-      { q: "Spell the word for a baby cat", a: "kitten" },
-      { q: "What’s the opposite of 'hot'?", a: "cold" },
-      { q: "Fill in the blank: She ___ to school.", a: "goes" },
-      { q: "What is the plural of 'child'?", a: "children" }
-    ];
-    const selected = words[Math.floor(Math.random() * words.length)];
-    correctAnswer = selected.a.toLowerCase();
-    document.getElementById('question').textContent = selected.q;
+function updateTimer() {
+  document.getElementById("timer").textContent = `⏳ Time left: ${timeLeft}s`;
+}
 
-  } else if (subject === 'logic') {
-    const logicQuestions = [
-      { q: "A triangle has 3 sides. (true/false)", a: "true" },
-      { q: "5 is greater than 10. (true/false)", a: "false" },
-      { q: "All dogs are mammals. (true/false)", a: "true" }
-    ];
-    const selected = logicQuestions[Math.floor(Math.random() * logicQuestions.length)];
-    correctAnswer = selected.a.toLowerCase();
-    document.getElementById('question').textContent = selected.q;
+function checkAnswer() {
+  const selected = document.querySelector('input[name="choice"]:checked');
+  if (!selected) {
+    alert("Please select an answer!");
+    return;
   }
 
-  document.getElementById('answer').value = '';
-  document.getElementById('feedback').textContent = '';
+  const userAnswer = selected.value.trim().toLowerCase();
+
+  clearInterval(timer);
+
+  if (userAnswer === correctAnswer) {
+    document.getElementById('feedback').textContent = "✅ Correct!";
+    score++;
+  } else {
+    document.getElementById('feedback').textContent = `❌ Wrong. Correct: ${correctAnswer}`;
+  }
+
+  document.getElementById('score').textContent = `Score: ${score}`;
+  questionsAnswered++;
+
+  if (questionsAnswered >= totalQuestions) {
+    setTimeout(endQuiz, 1500);
+  } else {
+    setTimeout(generateQuestion, 1500);
+  }
 }
 
-        function checkAnswer() {
-            
-            let userAnswer = document.getElementById('answer').value.trim().toLowerCase();
-
-if (subject === 'math') {
-  userAnswer = Number(userAnswer);
+function updateProgress() {
+  const progress = Math.round((questionsAnswered / totalQuestions) * 100);
+  document.getElementById("progressBar").style.width = `${progress}%`;
 }
 
+function endQuiz() {
+  clearInterval(timer);
+  const date = new Date().toLocaleString();
+  const table = document.getElementById("scoreTable").querySelector("tbody");
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td>${subject.toUpperCase()}</td>
+    <td>${studentName}</td>
+    <td>${score}/${totalQuestions}</td>
+    <td>${difficultyLevel}</td>
+    <td>${date}</td>
+  `;
+  table.appendChild(row);
 
-            if (userAnswer === correctAnswer) {
-                document.getElementById('feedback').textContent = "✅ Correct!";
-                score++;
-            } else {
-                document.getElementById('feedback').textContent = "❌ Try Again!";
-            }
-
-            document.getElementById('score').textContent = `Score: ${score}`;
-
-            // Save result after 5 questions
-            if (score >= 5) {
-                saveResult();
-                document.getElementById('quiz-content').style.display = 'none';
-                document.getElementById('setup').style.display = 'block';
-                alert("🎉 Quiz complete! Your score was saved.");
-            } else {
-                setTimeout(generateQuestion, 1500);
-            }
-        }
-
-        function updateTimer() {
-            document.getElementById('timer').textContent = `⏳ Time left: ${timeLeft}s`;
-        }
-
-        function saveResult() {
-            const date = new Date().toLocaleDateString();
-const result = {
-  name: studentName,
-  score: score,
-  level: difficultyLevel,
-  subject: subject,
-  date: date
-};
-
-
-            let scores = JSON.parse(localStorage.getItem('quizScores')) || [];
-            scores.push(result);
-            localStorage.setItem('quizScores', JSON.stringify(scores));
-
-            showScores();
-        }
-
-        function showScores() {
-            const tableBody = document.querySelector("#scoreTable tbody");
-            tableBody.innerHTML = '';
-            const scores = JSON.parse(localStorage.getItem('quizScores')) || [];
-
-            scores.forEach(score => {
-                const row = `<tr>
-                
-                            <td>${score.subject}</td>
-                <td>${score.name}</td>
-                <td>${score.score}</td>
-                <td>${score.level}</td>
-                <td>${score.date}</td>
-                </tr>`;
-                tableBody.innerHTML += row;
-        });
-    }
-
-    showScores(); // Show scores on load
+  // Reset
+  document.getElementById('quiz-content').style.display = "none";
+  document.getElementById('choicesContainer').innerHTML = "";
+  document.getElementById('question').textContent = "";
+  document.getElementById('feedback').textContent = "";
+}
