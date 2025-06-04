@@ -1,4 +1,3 @@
-
 let totalQuestions = 5;
 let questionsAnswered = 0;
 let subject = '', studentName = '', difficultyLevel = '';
